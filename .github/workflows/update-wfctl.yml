@@ -1,0 +1,85 @@
+name: Update wfctl Formula
+
+on:
+  repository_dispatch:
+    types: [update-wfctl]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Update wfctl formula
+      env:
+        VERSION: ${{ github.event.client_payload.version }}
+      run: |
+        # Strip v prefix for formula version
+        FORMULA_VERSION="${VERSION#v}"
+
+        # Download checksums from the release
+        CHECKSUMS_URL="https://github.com/GoCodeAlone/workflow/releases/download/${VERSION}/checksums.txt"
+        curl -sL "$CHECKSUMS_URL" -o checksums.txt
+
+        # Extract SHA256 for each wfctl binary
+        SHA_DARWIN_AMD64=$(grep "wfctl-darwin-amd64$" checksums.txt | awk '{print $1}')
+        SHA_DARWIN_ARM64=$(grep "wfctl-darwin-arm64$" checksums.txt | awk '{print $1}')
+        SHA_LINUX_AMD64=$(grep "wfctl-linux-amd64$" checksums.txt | awk '{print $1}')
+        SHA_LINUX_ARM64=$(grep "wfctl-linux-arm64$" checksums.txt | awk '{print $1}')
+
+        # Generate the formula
+        cat > Formula/wfctl.rb << RUBY
+        class Wfctl < Formula
+          desc "CLI for the workflow orchestration engine — validate, inspect, deploy, and manage configs"
+          homepage "https://github.com/GoCodeAlone/workflow"
+          version "${FORMULA_VERSION}"
+          license "Apache-2.0"
+
+          on_macos do
+            on_intel do
+              url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-darwin-amd64"
+              sha256 "${SHA_DARWIN_AMD64}"
+            end
+            on_arm do
+              url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-darwin-arm64"
+              sha256 "${SHA_DARWIN_ARM64}"
+            end
+          end
+
+          on_linux do
+            on_intel do
+              url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-linux-amd64"
+              sha256 "${SHA_LINUX_AMD64}"
+            end
+            on_arm do
+              url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-linux-arm64"
+              sha256 "${SHA_LINUX_ARM64}"
+            end
+          end
+
+          def install
+            cpu = Hardware::CPU.intel? ? "amd64" : "arm64"
+            os = OS.mac? ? "darwin" : "linux"
+            bin.install "wfctl-#{os}-#{cpu}" => "wfctl"
+          end
+
+          test do
+            assert_match "wfctl", shell_output("#{bin}/wfctl --help 2>&1", 0)
+          end
+        end
+        RUBY
+
+        # Remove leading whitespace from heredoc
+        sed -i 's/^        //' Formula/wfctl.rb
+
+    - name: Commit and push
+      run: |
+        git config user.name "goreleaserbot"
+        git config user.email "bot@goreleaser.com"
+        git add Formula/wfctl.rb
+        git diff --cached --quiet && echo "No changes" && exit 0
+        git commit -m "chore: update wfctl to ${{ github.event.client_payload.version }}"
+        git push
