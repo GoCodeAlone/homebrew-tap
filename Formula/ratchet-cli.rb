@@ -30,6 +30,13 @@ class RatchetCli < Formula
     bin.install "ratchet"
   end
 
+  def post_install
+    # Ad-hoc codesign so macOS Gatekeeper allows execution
+    if OS.mac?
+      system "codesign", "--force", "--sign", "-", "#{bin}/ratchet"
+    end
+  end
+
   test do
     assert_match "ratchet", shell_output("#{bin}/ratchet --help 2>&1", 0)
   end

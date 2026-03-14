@@ -32,6 +32,13 @@ class Wfctl < Formula
     bin.install "wfctl-#{os}-#{cpu}" => "wfctl"
   end
 
+  def post_install
+    # Ad-hoc codesign so macOS Gatekeeper allows execution
+    if OS.mac?
+      system "codesign", "--force", "--sign", "-", "#{bin}/wfctl"
+    end
+  end
+
   test do
     assert_match "wfctl", shell_output("#{bin}/wfctl --help 2>&1", 0)
   end
