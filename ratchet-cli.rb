@@ -5,21 +5,21 @@
 class RatchetCli < Formula
   desc "Interactive AI agent CLI"
   homepage "https://github.com/GoCodeAlone/ratchet-cli"
-  version "0.2.2"
+  version "0.2.3"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.2/ratchet_darwin_amd64.tar.gz"
-      sha256 "7ef15b6d4761dea677636c369954f3647b5715a179831ae3e390935335fadec3"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.3/ratchet_darwin_amd64.tar.gz"
+      sha256 "8b6a7bbc79bd0a0f6033c6757ac29bb06079358917474411b6383196ccab8c0c"
 
       define_method(:install) do
         bin.install "ratchet"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.2/ratchet_darwin_arm64.tar.gz"
-      sha256 "3e09793fa96a91e6af710e5d2d9da336b65fc2b3cd30994338a637187c0e4a63"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.3/ratchet_darwin_arm64.tar.gz"
+      sha256 "dd2c73b17809578519879cc9605b673211773763285211954e22c388fb17b564"
 
       define_method(:install) do
         bin.install "ratchet"
@@ -29,15 +29,15 @@ class RatchetCli < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.2/ratchet_linux_amd64.tar.gz"
-      sha256 "73a7c85b472de2b29d4b3e877a68adf30f69811e0f78d22c8cb429c632ca914e"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.3/ratchet_linux_amd64.tar.gz"
+      sha256 "881e4e4c18a8d8fdb269f0ac031340fa0808552f8feefea26e5799fb4a652f3c"
       define_method(:install) do
         bin.install "ratchet"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.2/ratchet_linux_arm64.tar.gz"
-      sha256 "032df052efe878d88355b85703036ec91f3cf909fd93a476891809c82b43774e"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.2.3/ratchet_linux_arm64.tar.gz"
+      sha256 "ec15aedab2e8adb9a15a1935901ea74fe6e9f18e7728f2f721099c2af39ff3f0"
       define_method(:install) do
         bin.install "ratchet"
       end
