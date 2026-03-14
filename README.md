@@ -8,19 +8,20 @@ brew tap GoCodeAlone/tap
 
 | Package | Type | Description |
 |---------|------|-------------|
-| `ratchet` | Cask | Interactive AI agent CLI |
+| `ratchet-cli` | Formula | Interactive AI agent CLI |
 | `wfctl` | Formula | Workflow engine CLI — validate, inspect, deploy, manage configs |
-| `claude-skills` | Cask | Install Claude Code skill files into workspaces |
+| `claude-skills` | Formula | Install Claude Code skill files into workspaces |
 
 ## Install
 
 ```sh
-brew install --cask ratchet
+brew install ratchet-cli
 brew install wfctl
-brew install --cask claude-skills
+brew install claude-skills
 ```
 
 ## Auto-Updates
 
-- `ratchet` and `claude-skills` are updated automatically by GoReleaser on each release
+- `ratchet-cli` is updated automatically by GoReleaser on each release
 - `wfctl` is updated automatically via repository dispatch from the workflow repo's release workflow
+- `claude-skills` is updated automatically by GoReleaser on each release
