@@ -1,28 +1,28 @@
 class Wfctl < Formula
   desc "CLI for the workflow orchestration engine — validate, inspect, deploy, and manage configs"
   homepage "https://github.com/GoCodeAlone/workflow"
-  version "0.20.5"
+  version "0.21.0"
   license "Apache-2.0"
 
   on_macos do
     on_intel do
       url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-darwin-amd64"
-      sha256 "ec5eabdd74048a6611531d501d893b7fcc3b99adba9f93f7158aeabab36cf130"
+      sha256 "3ee5298143889c71c7dbed44b536c488d9eee6f015020469bc30187f7e22129e"
     end
     on_arm do
       url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-darwin-arm64"
-      sha256 "7ca1e1b67ed6b71727a2a3089337ccf7f389092a401f160ecaff6fbb019d70e1"
+      sha256 "4d9fcb663512ee3fb0e8c9267dfdc5ff5fedf5e43e739669da270c2758670101"
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-linux-amd64"
-      sha256 "23445e7d38ece7ff4bc8a674f69a7fb0f96c3933f48fdc5ca0a223c7c5e1cb83"
+      sha256 "99c04c6b2ce1f66b2a4d77aa8524ebeb66516255191379427b16822b44f91640"
     end
     on_arm do
       url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-linux-arm64"
-      sha256 "2999b4e947d4f35b60002d5806eeef4a12e865e5f9df3d7587a7710a84d42865"
+      sha256 "fcdf502a1d46fcd78618bf011e0724481a396a9d1334597186e52345281fd26d"
     end
   end
 
