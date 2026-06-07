@@ -6,17 +6,20 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
     - name: Update wfctl formula
       env:
         VERSION: ${{ github.event.client_payload.version }}
       run: |
+        set -euo pipefail
+
         # Strip v prefix for formula version
         FORMULA_VERSION="${VERSION#v}"
 
@@ -29,6 +32,10 @@ jobs:
         SHA_DARWIN_ARM64=$(grep "wfctl-darwin-arm64$" checksums.txt | awk '{print $1}')
         SHA_LINUX_AMD64=$(grep "wfctl-linux-amd64$" checksums.txt | awk '{print $1}')
         SHA_LINUX_ARM64=$(grep "wfctl-linux-arm64$" checksums.txt | awk '{print $1}')
+        test -n "$SHA_DARWIN_AMD64"
+        test -n "$SHA_DARWIN_ARM64"
+        test -n "$SHA_LINUX_AMD64"
+        test -n "$SHA_LINUX_ARM64"
 
         # Generate the formula
         cat > Formula/wfctl.rb << RUBY
@@ -81,11 +88,35 @@ jobs:
         # Remove leading whitespace from heredoc
         sed -i 's/^        //' Formula/wfctl.rb
 
-    - name: Commit and push
+    - name: Open update pull request
+      env:
+        GH_TOKEN: ${{ github.token }}
+        VERSION: ${{ github.event.client_payload.version }}
       run: |
+        set -euo pipefail
+
+        BRANCH="automation/update-wfctl-${VERSION}"
         git config user.name "goreleaserbot"
         git config user.email "bot@goreleaser.com"
+        git checkout -B "$BRANCH"
         git add Formula/wfctl.rb
         git diff --cached --quiet && echo "No changes" && exit 0
-        git commit -m "chore: update wfctl to ${{ github.event.client_payload.version }}"
-        git push
+        git commit -m "chore: update wfctl to ${VERSION}"
+        git push --force-with-lease --set-upstream origin "$BRANCH"
+
+        BODY="Automated wfctl Homebrew formula update for ${VERSION}."
+        if PR_NUMBER=$(gh pr view "$BRANCH" --json number --jq .number 2>/dev/null); then
+          gh pr edit "$PR_NUMBER" \
+            --title "chore: update wfctl to ${VERSION}" \
+            --body "$BODY"
+        else
+          PR_URL=$(gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "chore: update wfctl to ${VERSION}" \
+            --body "$BODY")
+          PR_NUMBER="${PR_URL##*/}"
+        fi
+
+        gh pr merge "$PR_NUMBER" --auto --squash --delete-branch || \
+          echo "Auto-merge unavailable; update PR ${PR_NUMBER} remains open."
