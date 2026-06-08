@@ -18,7 +18,7 @@ class Wfctl < Formula
   on_linux do
     on_intel do
       url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-linux-amd64"
-      sha256 "821db65e0b0190cb77b18f4655b0621427473a0111d3754536515ec800d74df89"
+      sha256 "821db65e0b0190cb77b18f4655b0621427473a011d3754536515ec800d74df89"
     end
     on_arm do
       url "https://github.com/GoCodeAlone/workflow/releases/download/v#{version}/wfctl-linux-arm64"
