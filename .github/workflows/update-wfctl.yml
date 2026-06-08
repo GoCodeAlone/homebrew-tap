@@ -17,6 +17,7 @@ jobs:
     - name: Update wfctl formula
       env:
         VERSION: ${{ github.event.client_payload.version }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         set -euo pipefail
 
@@ -25,17 +26,24 @@ jobs:
 
         # Download checksums from the release
         CHECKSUMS_URL="https://github.com/GoCodeAlone/workflow/releases/download/${VERSION}/checksums.txt"
-        curl -sL "$CHECKSUMS_URL" -o checksums.txt
+        if ! curl --fail --silent --show-error --location --retry 6 --retry-delay 10 --retry-all-errors "$CHECKSUMS_URL" -o checksums.txt; then
+          echo "::warning::release asset URL was unavailable; falling back to GitHub release API"
+          gh release download "$VERSION" \
+            --repo GoCodeAlone/workflow \
+            --pattern checksums.txt \
+            --dir . \
+            --clobber
+        fi
 
         # Extract SHA256 for each wfctl binary
         SHA_DARWIN_AMD64=$(grep "wfctl-darwin-amd64$" checksums.txt | awk '{print $1}')
         SHA_DARWIN_ARM64=$(grep "wfctl-darwin-arm64$" checksums.txt | awk '{print $1}')
         SHA_LINUX_AMD64=$(grep "wfctl-linux-amd64$" checksums.txt | awk '{print $1}')
         SHA_LINUX_ARM64=$(grep "wfctl-linux-arm64$" checksums.txt | awk '{print $1}')
-        test -n "$SHA_DARWIN_AMD64"
-        test -n "$SHA_DARWIN_ARM64"
-        test -n "$SHA_LINUX_AMD64"
-        test -n "$SHA_LINUX_ARM64"
+        test -n "$SHA_DARWIN_AMD64" || { echo "::error::missing checksum for wfctl-darwin-amd64"; cat checksums.txt; exit 1; }
+        test -n "$SHA_DARWIN_ARM64" || { echo "::error::missing checksum for wfctl-darwin-arm64"; cat checksums.txt; exit 1; }
+        test -n "$SHA_LINUX_AMD64" || { echo "::error::missing checksum for wfctl-linux-amd64"; cat checksums.txt; exit 1; }
+        test -n "$SHA_LINUX_ARM64" || { echo "::error::missing checksum for wfctl-linux-arm64"; cat checksums.txt; exit 1; }
 
         # Generate the formula
         cat > Formula/wfctl.rb << RUBY
