@@ -1,30 +1,30 @@
 class RatchetCli < Formula
   desc "Interactive AI agent CLI"
   homepage "https://github.com/GoCodeAlone/ratchet-cli"
-  version "0.30.18"
+  version "0.30.19"
   license "Apache-2.0"
 
   on_macos do
     on_intel do
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.18/ratchet_darwin_amd64.tar.gz"
-      sha256 "157c0f44292b1f5c309e673555b54e136b48d0f98a6c0c9bfac81b11ce085b62"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.19/ratchet_darwin_amd64.tar.gz"
+      sha256 "53fde0833c2b794855a59ba0998ca521f9e48bd3d2c843d3a4ef93be490bcea9"
     end
 
     on_arm do
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.18/ratchet_darwin_arm64.tar.gz"
-      sha256 "4cf65a96e29d119849f6ad734fd1af1fcd9ba2b9c690d4ef7abcac34852adfbf"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.19/ratchet_darwin_arm64.tar.gz"
+      sha256 "b481d5af295002c25ee6215b12d408ac6ceffe803b1e3a3f66a43c4c22a03d02"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.18/ratchet_linux_amd64.tar.gz"
-      sha256 "10276af277c22e3d82962efcf4efd35b1f6ec9e735971d8a437a450593c747b1"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.19/ratchet_linux_amd64.tar.gz"
+      sha256 "a73d72d40ee39e11d126b6523c2ecff341ccb8a35a2d67ec0921e4807e526a97"
     end
 
     on_arm do
-      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.18/ratchet_linux_arm64.tar.gz"
-      sha256 "1ab3066de42e49ef9e9bf146b0a04d0b30851ec049128c5f1c2fb29e5038b3a9"
+      url "https://github.com/GoCodeAlone/ratchet-cli/releases/download/v0.30.19/ratchet_linux_arm64.tar.gz"
+      sha256 "207dba14f2ba590904a7954ff3497cf3ae65f401be0912185c19de0c484c153d"
     end
   end
 
